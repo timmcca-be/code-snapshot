@@ -19,11 +19,15 @@
                     </label>
                 </div>
 
-                <div class="header__checkbox">
-                    <input type="checkbox" id="export-svg">
-                    <label for="export-svg">
-                        Export SVG
+                <div class="header__dropdown">
+                    <label for="export-format">
+                        Format:
                     </label>
+                    <select id="export-format">
+                        <option value="png" selected>PNG</option>
+                        <option value="svg">SVG</option>
+                        <option value="html">HTML</option>
+                    </select>
                 </div>
             </div>
             <div class="header__size"></div>

@@ -1,7 +1,8 @@
 const snapshotContainerNode = document.querySelector('.snapshot-container');
 const snapshotContainerBackgroundNode = document.querySelector('.snapshot-container__background');
+const terminalCodeSnippetNode = document.querySelector('.terminal__code-snippet');
 const terminalNode = document.querySelector('.terminal');
-const exportSvgNode = document.getElementById('export-svg');
+const exportFormatNode = document.getElementById('export-format');
 
 const resetStyles = () => {
     snapshotContainerNode.style.resize = '';
@@ -23,22 +24,30 @@ export const takeSnapshot = () => {
         }
     };
 
-    if(exportSvgNode.checked) {
-        domtoimage
-            .toSvg(snapshotContainerBackgroundNode, options)
-            .then(function(dataUrl) {
-                resetStyles();
-                var link = document.createElement('a');
-                link.download = 'code-snapshot.svg';
-                link.href = dataUrl;
-                link.click();
-            });
-    } else {
-        domtoimage
-            .toBlob(snapshotContainerBackgroundNode, options)
-            .then(function(blob) {
-                resetStyles();
-                window.saveAs(blob, 'code-snapshot.png');
-            });
+    switch(exportFormatNode.value) {
+        case 'png':
+            domtoimage
+                .toBlob(snapshotContainerBackgroundNode, options)
+                .then(function(blob) {
+                    resetStyles();
+                    window.saveAs(blob, 'code-snapshot.png');
+                });
+            break;
+        case 'svg':
+            domtoimage
+                .toSvg(snapshotContainerBackgroundNode, options)
+                .then(function(dataUrl) {
+                    resetStyles();
+                    const link = document.createElement('a');
+                    link.download = 'code-snapshot.svg';
+                    link.href = dataUrl;
+                    link.click();
+                });
+        case 'html':
+            const link = document.createElement('a');
+            link.download = 'code-snapshot.html';
+            link.href = 'data:text/attachment;,' + encodeURIComponent(terminalCodeSnippetNode.innerHTML);
+            link.click();
+            resetStyles();
     }
 };
